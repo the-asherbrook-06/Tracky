@@ -1,8 +1,10 @@
 // import 'dart:typed_data';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:image/image.dart' as img;
-import 'package:tflite_flutter/tflite_flutter.dart';
+
+// screens
 import 'package:tracky/attendancescreen.dart';
 
 late List<CameraDescription> cameras;
