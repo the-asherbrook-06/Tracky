@@ -1,6 +1,10 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:tracky/camerapage.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   runApp(const Tracky());
 }
 
@@ -10,11 +14,11 @@ class Tracky extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'tracky',
-      routes: {
-        '/': (context) => const WelcomePage(),
-      }
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'tracky',
+        routes: {
+          '/': (context) => const WelcomePage(),
+        });
   }
 }
 
@@ -23,6 +27,9 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return const MaterialApp(
+      title: 'tracky',
+      home: LiveCameraTFLite(),
+    );
   }
 }
