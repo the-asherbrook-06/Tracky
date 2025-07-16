@@ -160,14 +160,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  image:
-    dependency: "direct main"
-    description:
-      name: image
-      sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.4"
   http:
     dependency: "direct main"
     description:
@@ -192,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.11"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.5.4"
   js:
     dependency: transitive
     description:
@@ -367,8 +367,4 @@ packages:
     version: "6.3.0"
 sdks:
   dart: ">=3.0.0 <4.0.0"
-<<<<<<< HEAD
   flutter: ">=3.10.0"
-=======
-  flutter: ">=1.17.0"
->>>>>>> f1bd7bf3b9c21e61c0c7a01bcd6047632366a33b
