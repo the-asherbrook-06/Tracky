@@ -194,7 +194,8 @@ class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
                   ),
                 );
               },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.brown)),
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.brown)),
               child: const Text("View Attendance"),
             ),
           ),
