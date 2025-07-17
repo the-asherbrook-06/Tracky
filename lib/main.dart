@@ -2,10 +2,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tracky/camerapage.dart';
-import 'package:tracky/screens/ProfilePage.dart';
 
 // screens
+import 'package:tracky/screens/CameraPage.dart';
+import 'package:tracky/screens/ProfilePage.dart';
 import 'package:tracky/screens/RegisterPage.dart';
 import 'package:tracky/screens/WelcomePage.dart';
 import 'package:tracky/screens/LoginPage.dart';

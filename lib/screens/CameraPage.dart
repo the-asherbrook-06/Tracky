@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
 // screens
-import 'package:tracky/attendancescreen.dart';
+import 'package:tracky/screens/attendancescreen.dart';
 
 late List<CameraDescription> cameras;
 Set<String> _detectedStudents = {};
