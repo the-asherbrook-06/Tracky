@@ -10,14 +10,14 @@ import 'package:tracky/attendancescreen.dart';
 late List<CameraDescription> cameras;
 Set<String> _detectedStudents = {};
 
-class LiveCameraTFLite extends StatefulWidget {
-  const LiveCameraTFLite({super.key});
+class MarkAttendance extends StatefulWidget {
+  const MarkAttendance({super.key});
 
   @override
-  State<LiveCameraTFLite> createState() => _LiveCameraTFLiteState();
+  State<MarkAttendance> createState() => _MarkAttendanceState();
 }
 
-class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
+class _MarkAttendanceState extends State<MarkAttendance> {
   CameraController? _cameraController;
   Interpreter? _interpreter;
   List<String> _labels = [];
@@ -37,8 +37,7 @@ class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
       _interpreter = await Interpreter.fromAsset('assets/models/model.tflite');
 
       // Load labels
-      final labelsRaw = await DefaultAssetBundle.of(context)
-          .loadString('assets/models/labels.txt');
+      final labelsRaw = await DefaultAssetBundle.of(context).loadString('assets/models/labels.txt');
       _labels = labelsRaw.split('\n');
 
       // Initialize camera
@@ -59,11 +58,10 @@ class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
 
     try {
       final converted = _convertCameraImage(image);
-      final resized =
-          img.copyResize(converted, width: inputSize, height: inputSize);
+      final resized = img.copyResize(converted, width: inputSize, height: inputSize);
       final input = _imageToByteListFloat32(resized);
 
-      var output = List.filled(5, 0.0).reshape([1, 5]); // Fix shape
+      var output = List.filled(5, 0.0).reshape([1, 5]);
       _interpreter!.run(input, output);
 
       final scores = output[0];
@@ -79,12 +77,10 @@ class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
       _detectedStudents.add(detectedLabel);
 
       setState(() {
-        _result =
-            "${_labels[maxIndex]} ${(maxScore * 100).toStringAsFixed(1)}%";
+        _result = "${_labels[maxIndex]} ${(maxScore * 100).toStringAsFixed(1)}%";
       });
 
-      // ⏳ Add delay to reduce frame rate
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 50));
     } catch (e) {
       debugPrint('Inference error: $e');
     } finally {
@@ -144,65 +140,71 @@ class _LiveCameraTFLiteState extends State<LiveCameraTFLite> {
 
   @override
   Widget build(BuildContext context) {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: SizedBox(
-                width: _cameraController!.value.previewSize!.height,
-                height: _cameraController!.value.previewSize!.width,
-                child: CameraPreview(_cameraController!),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 60,
-            left: 20,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                _result,
-                style: const TextStyle(color: Colors.white, fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 20,
-            right: 20,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AttendanceScreen(
-                      allStudents: _labels,
-                      presentStudents: _detectedStudents.toList(),
+      appBar: AppBar(
+        title: const Text("Mark Attendance"),
+      ),
+      body: (_cameraController == null || !_cameraController!.value.isInitialized)
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                SizedBox.expand(
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: SizedBox(
+                      width: _cameraController!.value.previewSize!.height,
+                      height: _cameraController!.value.previewSize!.width,
+                      child: CameraPreview(_cameraController!),
                     ),
                   ),
-                );
-              },
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.brown)),
-              child: const Text("View Attendance"),
+                ),
+                Positioned(
+                  bottom: 70,
+                  left: 20,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.black87,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      _result,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 15,
+                  left: 20,
+                  right: 20,
+                  child: SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AttendanceScreen(
+                              allStudents: _labels,
+                              presentStudents: _detectedStudents.toList(),
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
+                      child: const Text("View Attendance"),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

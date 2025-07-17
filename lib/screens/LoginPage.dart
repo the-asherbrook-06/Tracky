@@ -91,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                   onPressed: () async {
-                    // TODO: Sign In
+                    // TODO: Sign in
                     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   },
                   child: Text(

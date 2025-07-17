@@ -1,7 +1,6 @@
 // packages
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:tracky/attendancescreen.dart';
 import 'package:tracky/camerapage.dart';
 
 // screens
@@ -24,13 +23,14 @@ class Tracky extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'tracky',
-        initialRoute: '/camera',
+        theme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.light),
+        darkTheme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.dark),
         routes: {
           '/': (context) => const WelcomePage(),
           '/register': (context) => const RegisterPage(),
           '/login': (context) => const LoginPage(),
-          '/home': (context) => const HomePage(),
-          '/camera': (context) => const LiveCameraTFLite(),
+          '/home': (context) => const DashboardPage(),
+          '/camera': (context) => const MarkAttendance(),
         });
   }
 }

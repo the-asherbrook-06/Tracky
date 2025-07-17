@@ -1,5 +1,4 @@
 // packages
-
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -10,7 +9,6 @@ class WelcomePage extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
           Expanded(

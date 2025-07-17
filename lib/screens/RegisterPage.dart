@@ -1,6 +1,6 @@
 // package
-import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -133,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                   onPressed: () async {
-                    // TODO: Sign Up
+                    // TODO: Signup
                     Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   },
                   child: Text(
