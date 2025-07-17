@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 // package
 import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+// auth
+import 'package:tracky/auth/Auth.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -132,9 +138,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                  onPressed: () async {
-                    // TODO: Signup
-                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  onPressed: () {
+                    final name = _nameController.text.trim();
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+
+                    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+                      return;
+                    }
+
+                    Provider.of<AuthProvider>(context, listen: false).registerUser(
+                      name: name,
+                      email: email,
+                      password: password,
+                      context: context,
+                    );
                   },
                   child: Text(
                     "Register",

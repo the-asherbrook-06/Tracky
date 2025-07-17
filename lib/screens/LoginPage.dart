@@ -1,6 +1,10 @@
 // package
 import 'package:hugeicons/hugeicons.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+// auth
+import 'package:tracky/auth/Auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -90,9 +94,21 @@ class _LoginPageState extends State<LoginPage> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-                  onPressed: () async {
-                    // TODO: Sign in
-                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+                  onPressed: () {
+                    final email = _emailController.text.trim();
+                    final password = _passwordController.text.trim();
+
+                    if (email.isEmpty || password.isEmpty) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+                      return;
+                    }
+
+                    Provider.of<AuthProvider>(context, listen: false).loginUser(
+                      email: email,
+                      password: password,
+                      context: context,
+                    );
                   },
                   child: Text(
                     "Login",

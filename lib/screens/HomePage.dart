@@ -1,10 +1,10 @@
 // package
-import 'dart:developer';
-
 import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // auth
+import 'package:tracky/auth/Auth.dart';
 
 // components
 import 'package:tracky/components/DashboardCards.dart';
@@ -19,15 +19,9 @@ class DashboardPage extends StatelessWidget {
         title: const Text("Dashboard"),
         actions: [
           IconButton(
-            icon: const Icon(HugeIcons.strokeRoundedUser02),
-            onPressed: () {
+            icon: const Icon(HugeIcons.strokeRoundedLogout01),
+            onPressed: () async {
               // TODO: Navigate to Profile Page
-            },
-          ),
-          IconButton(
-            icon: const Icon(HugeIcons.strokeRoundedLogout02),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/');
             },
           )
         ],
@@ -59,7 +53,7 @@ class DashboardPage extends StatelessWidget {
                       text: "Profile",
                       icon: HugeIcons.strokeRoundedUser02,
                       onTap: () {
-                        log("Hello");
+                        Navigator.pushNamed(context, '/profile');
                       },
                     ),
                     DashboardCard(

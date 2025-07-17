@@ -1,7 +1,9 @@
 // packages
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tracky/camerapage.dart';
+import 'package:tracky/screens/ProfilePage.dart';
 
 // screens
 import 'package:tracky/screens/RegisterPage.dart';
@@ -9,11 +11,22 @@ import 'package:tracky/screens/WelcomePage.dart';
 import 'package:tracky/screens/LoginPage.dart';
 import 'package:tracky/screens/HomePage.dart';
 
+// auth
+import 'auth/Auth.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
-  runApp(const Tracky());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const Tracky(),
+    ),
+  );
 }
+
 
 class Tracky extends StatelessWidget {
   const Tracky({super.key});
@@ -31,6 +44,7 @@ class Tracky extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/home': (context) => const DashboardPage(),
           '/camera': (context) => const MarkAttendance(),
+          '/profile': (context) => const ProfilePage(),
         });
   }
 }
