@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 // screens
 import 'package:tracky/screens/CameraPage.dart';
-import 'package:tracky/screens/ProfilePage.dart';
 import 'package:tracky/screens/RegisterPage.dart';
 import 'package:tracky/screens/WelcomePage.dart';
 import 'package:tracky/screens/LoginPage.dart';
@@ -45,8 +44,7 @@ class Tracky extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/login': (context) => const LoginPage(),
         '/home': (context) => const DashboardPage(),
-        '/camera': (context) => MarkAttendance(cameras: cameras), // pass it here!
-        '/profile': (context) => const ProfilePage(),
+        '/camera': (context) => MarkAttendance(cameras: cameras),
       },
     );
   }
