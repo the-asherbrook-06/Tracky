@@ -21,7 +21,7 @@ class DashboardPage extends StatelessWidget {
           IconButton(
             icon: const Icon(HugeIcons.strokeRoundedLogout01),
             onPressed: () async {
-              // TODO: Navigate to Profile Page
+              Provider.of<AuthProvider>(context, listen: false).logoutUser(context);
             },
           )
         ],
