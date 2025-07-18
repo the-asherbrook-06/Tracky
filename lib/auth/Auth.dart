@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class AuthProvider with ChangeNotifier {
   Map<String, dynamic>? _userDetails;
@@ -159,6 +160,35 @@ class AuthProvider with ChangeNotifier {
       }
     } catch (e) {
       debugPrint("Error marking attendance: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, bool>?> getAttendanceByDate({String? date}) async {
+    final url = Uri.parse('https://tracky-backend-gixb.onrender.com/api/attendance-by-date');
+    date ??= DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({'date': date}),
+      );
+
+      debugPrint("Attendance fetch status: ${response.statusCode}");
+      debugPrint("Attendance response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        return data.map((key, value) => MapEntry(key, value as bool));
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Error fetching attendance: $e");
       return null;
     }
   }

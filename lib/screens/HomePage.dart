@@ -8,6 +8,7 @@ import 'package:tracky/auth/Auth.dart';
 
 // components
 import 'package:tracky/components/DashboardCards.dart';
+import 'package:tracky/components/StudentCard.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -29,7 +30,7 @@ class DashboardPage extends StatelessWidget {
       body: ListView(
         children: [
           Container(
-            margin: const EdgeInsets.all(8),
+            margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(75),
@@ -63,6 +64,46 @@ class DashboardPage extends StatelessWidget {
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(75),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Today's Attendance",
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                ),
+                Divider(color: Theme.of(context).colorScheme.surface, thickness: 1.5),
+                FutureBuilder<Map<String, bool>?>(
+                  future: Provider.of<AuthProvider>(context, listen: false).getAttendanceByDate(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError || !snapshot.hasData) {
+                      return const Text("Failed to load attendance.");
+                    }
+
+                    final attendanceMap = snapshot.data!;
+
+                    return Column(
+                      children: attendanceMap.entries.map((entry) {
+                        return StudentCard(name: entry.key, isPresent: entry.value);
+                      }).toList(),
+                    );
+                  },
+                )
               ],
             ),
           )
