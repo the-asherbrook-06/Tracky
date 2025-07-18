@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class AttendanceScreen extends StatelessWidget {
   final List<String> allStudents;
-  final List<String> presentStudents;
 
   const AttendanceScreen({
     super.key,
     required this.allStudents,
-    required this.presentStudents,
   });
 
   @override
@@ -18,13 +16,13 @@ class AttendanceScreen extends StatelessWidget {
         itemCount: allStudents.length,
         itemBuilder: (context, index) {
           final student = allStudents[index];
-          final isPresent = presentStudents.contains(student);
+
           return ListTile(
             title: Text(student),
-            trailing: Text(
-              isPresent ? "Available" : "Not Available",
+            trailing: const Text(
+              "Available",
               style: TextStyle(
-                color: isPresent ? Colors.green : Colors.red,
+                color: Colors.green,
                 fontWeight: FontWeight.bold,
               ),
             ),

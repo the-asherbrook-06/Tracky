@@ -151,6 +151,13 @@ class _MarkAttendanceState extends State<MarkAttendance> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Mark Attendance"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () async {
+            await _cameraController?.stopImageStream();
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: (_cameraController == null || !_cameraController!.value.isInitialized)
           ? const Center(child: CircularProgressIndicator())
@@ -192,22 +199,21 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                     child: ElevatedButton(
                       onPressed: () async {
                         final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                        final result = await authProvider.markAttendance(
-                          detectedRollNumbers: _detectedStudents.toList(),
-                        );
 
-                        log(result.toString());
+                        log(_detectedStudents.toString());
+
+                        final result = await authProvider.markAttendance(
+                          detectedRollNumbers: _detectedStudents.map((e) => e.substring(2)).toList(),
+                        );
 
                         if (result != null) {
                           final present = List<String>.from(result['present']);
-                          final all = [...present, ...List<String>.from(result['absent'])].toSet().toList();
 
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => AttendanceScreen(
-                                allStudents: all,
-                                presentStudents: present,
+                                allStudents: present,
                               ),
                             ),
                           );

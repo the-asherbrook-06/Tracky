@@ -178,6 +178,7 @@ class AuthProvider with ChangeNotifier {
         body: jsonEncode({'date': date}),
       );
 
+      debugPrint("Date: $date");
       debugPrint("Attendance fetch status: ${response.statusCode}");
       debugPrint("Attendance response body: ${response.body}");
 

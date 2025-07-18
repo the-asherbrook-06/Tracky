@@ -15,7 +15,7 @@ import 'auth/Auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final availableCamerasList = await availableCameras(); // fetch safely
+  final availableCamerasList = await availableCameras();
   runApp(
     MultiProvider(
       providers: [
