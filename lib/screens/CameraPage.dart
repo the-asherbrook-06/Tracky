@@ -1,5 +1,10 @@
-// import 'dart:typed_data';
+// ignore_for_file: use_build_context_synchronously
+
+// packages
+import 'dart:developer';
+
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -7,11 +12,14 @@ import 'package:camera/camera.dart';
 // screens
 import 'package:tracky/screens/attendancescreen.dart';
 
-late List<CameraDescription> cameras;
+import '../auth/Auth.dart';
+
 Set<String> _detectedStudents = {};
 
 class MarkAttendance extends StatefulWidget {
-  const MarkAttendance({super.key});
+  final List<CameraDescription> cameras;
+
+  const MarkAttendance({super.key, required this.cameras});
 
   @override
   State<MarkAttendance> createState() => _MarkAttendanceState();
@@ -41,7 +49,7 @@ class _MarkAttendanceState extends State<MarkAttendance> {
       _labels = labelsRaw.split('\n');
 
       // Initialize camera
-      final camera = cameras.first;
+      final camera = widget.cameras.first;
       _cameraController = CameraController(camera, ResolutionPreset.low);
       await _cameraController!.initialize();
       await _cameraController!.startImageStream(_onCameraImage);
@@ -182,16 +190,32 @@ class _MarkAttendanceState extends State<MarkAttendance> {
                   child: SizedBox(
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AttendanceScreen(
-                              allStudents: _labels,
-                              presentStudents: _detectedStudents.toList(),
-                            ),
-                          ),
+                      onPressed: () async {
+                        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                        final result = await authProvider.markAttendance(
+                          detectedRollNumbers: _detectedStudents.toList(),
                         );
+
+                        log(result.toString());
+
+                        if (result != null) {
+                          final present = List<String>.from(result['present']);
+                          final all = [...present, ...List<String>.from(result['absent'])].toSet().toList();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AttendanceScreen(
+                                allStudents: all,
+                                presentStudents: present,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Failed to mark attendance.")),
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

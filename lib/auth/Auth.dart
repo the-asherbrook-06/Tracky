@@ -124,4 +124,42 @@ class AuthProvider with ChangeNotifier {
 
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
+
+  // ---------------------------- //
+  //   Attendance Marking Logic   //
+  // ---------------------------- //
+
+  Future<Map<String, dynamic>?> markAttendance({
+    required List<String> detectedRollNumbers,
+  }) async {
+    if (_token == null) return null;
+
+    final url = Uri.parse('https://tracky-backend-gixb.onrender.com/api/mark-attendance');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({
+          'detectedRollNumbers': detectedRollNumbers,
+        }),
+      );
+
+      debugPrint("Attendance API status: ${response.statusCode}");
+      debugPrint("Attendance API body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        debugPrint("Attendance API failed");
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Error marking attendance: $e");
+      return null;
+    }
+  }
 }

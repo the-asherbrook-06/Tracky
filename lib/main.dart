@@ -16,35 +16,38 @@ import 'auth/Auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  cameras = await availableCameras();
+  final availableCamerasList = await availableCameras(); // fetch safely
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
-      child: const Tracky(),
+      child: Tracky(cameras: availableCamerasList),
     ),
   );
 }
 
 
 class Tracky extends StatelessWidget {
-  const Tracky({super.key});
+  final List<CameraDescription> cameras;
+
+  const Tracky({super.key, required this.cameras});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'tracky',
-        theme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.light),
-        darkTheme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.dark),
-        routes: {
-          '/': (context) => const WelcomePage(),
-          '/register': (context) => const RegisterPage(),
-          '/login': (context) => const LoginPage(),
-          '/home': (context) => const DashboardPage(),
-          '/camera': (context) => const MarkAttendance(),
-          '/profile': (context) => const ProfilePage(),
-        });
+      debugShowCheckedModeBanner: false,
+      title: 'tracky',
+      theme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.light),
+      darkTheme: ThemeData(colorSchemeSeed: Colors.green, brightness: Brightness.dark),
+      routes: {
+        '/': (context) => const WelcomePage(),
+        '/register': (context) => const RegisterPage(),
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const DashboardPage(),
+        '/camera': (context) => MarkAttendance(cameras: cameras), // pass it here!
+        '/profile': (context) => const ProfilePage(),
+      },
+    );
   }
 }
